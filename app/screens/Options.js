@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ScrollView, StatusBar, Platform, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { connectAlert } from '../components/Alert';
 import { ListItem, Separator } from '../components/List';
 
 const ICON_PREFIX = Platform.OS === 'ios' ? 'ios' : 'md';
@@ -12,6 +13,7 @@ const ICON_SIZE = 23;
 class Options extends Component {
   static propTypes = {
     navigation: PropTypes.object,
+    alertWithType: PropTypes.func,
   };
 
   handleThemePress = () => {
@@ -19,8 +21,8 @@ class Options extends Component {
   };
 
   handleSitePress = () => {
-    Linking.openURL('http://fixer.io').catch(() => {
-      alert('An error occured');
+    Linking.openURL('httpkjhdfg://fixer.io').catch(() => {
+      this.props.alertWithType('error', 'Sorry!', 'Could not connect to Fixer.io');
     });
   };
 
@@ -47,4 +49,4 @@ class Options extends Component {
   }
 }
 
-export default Options;
+export default connectAlert(Options);
