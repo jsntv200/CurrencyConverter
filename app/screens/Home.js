@@ -29,16 +29,16 @@ class Home extends Component {
     this.props.navigation.navigate('CurrencyList', { title: 'Quote Currency' });
   };
 
+  handleOptionsPress = () => {
+    this.props.navigation.navigate('Options');
+  };
+
   handleTextChange = (text) => {
     console.log('change text', text);
   };
 
   handleSwapCurrency = () => {
     console.log('press swap currency');
-  };
-
-  handleOptionsPress = () => {
-    console.log('press options press');
   };
 
   render() {
