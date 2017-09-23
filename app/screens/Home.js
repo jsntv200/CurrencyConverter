@@ -12,17 +12,17 @@ import { LastConverted } from '../components/Text';
 
 import { swapCurrency, changeCurrencyAmount } from '../actions/currencies';
 
-const TEMP_BASE_CURRENCY = 'USD';
-const TEMP_QUOTE_CURRENCY = 'GBP';
-const TEMP_BASE_PRICE = '100';
-const TEMP_QUOTE_PRICE = '79.74';
-const TEMP_CONVERSION_RATE = 0.7974;
-const TEMP_CONVERSION_DATE = new Date();
-
 class Home extends Component {
   static propTypes = {
     navigation: PropTypes.object,
     dispatch: PropTypes.func,
+    baseCurrency: PropTypes.string,
+    quoteCurrency: PropTypes.string,
+    amount: PropTypes.number,
+    conversionDate: PropTypes.object,
+    conversionRate: PropTypes.number,
+    quotePrice: PropTypes.number,
+    isFetching: PropTypes.bool,
   };
 
   handlePressBaseCurrency = () => {
@@ -53,24 +53,24 @@ class Home extends Component {
         <KeyboardAvoidingView behavior="padding">
           <Logo />
           <InputWithButton
-            buttonText={TEMP_BASE_CURRENCY}
-            onPress={this.handlePressBaseCurrency}
-            defaultValue={TEMP_BASE_PRICE}
+            buttonText={this.props.baseCurrency}
+            defaultValue={this.props.amount.toString()}
             keyboardType="numeric"
             onChangeText={this.handleChangeText}
+            onPress={this.handlePressBaseCurrency}
           />
           <InputWithButton
-            buttonText={TEMP_QUOTE_CURRENCY}
-            onPress={this.handlePressQuoteCurrency}
-            value={TEMP_QUOTE_PRICE}
+            buttonText={this.props.quoteCurrency}
+            value={this.props.isFetching ? '...' : this.props.quotePrice.toFixed(2)}
             editable={false}
             keyboardType="numeric"
+            onPress={this.handlePressQuoteCurrency}
           />
           <LastConverted
-            base={TEMP_BASE_CURRENCY}
-            conversionRate={TEMP_CONVERSION_RATE}
-            date={TEMP_CONVERSION_DATE}
-            quote={TEMP_QUOTE_CURRENCY}
+            base={this.props.baseCurrency}
+            conversionRate={this.props.conversionRate}
+            date={this.props.conversionDate}
+            quote={this.props.quoteCurrency}
           />
           <ClearButton text="Reverse Currency" onPress={this.handleSwapCurrency} />
         </KeyboardAvoidingView>
@@ -79,4 +79,32 @@ class Home extends Component {
   }
 }
 
-export default connect()(Home);
+const mapStateToProps = (state) => {
+  const { baseCurrency, quoteCurrency, amount, isFetching } = state.currencies;
+  const conversionSelector = state.currencies[baseCurrency] || {};
+
+  let conversionDate = new Date();
+  let conversionRate = 0;
+  let quotePrice = 0;
+
+  if (conversionSelector.date) {
+    conversionDate = new Date(conversionSelector.date);
+  }
+
+  if (conversionSelector.rates) {
+    conversionRate = conversionSelector.rates[quoteCurrency];
+    quotePrice = amount * conversionRate;
+  }
+
+  return {
+    baseCurrency,
+    quoteCurrency,
+    amount,
+    conversionDate,
+    conversionRate,
+    quotePrice,
+    isFetching,
+  };
+};
+
+export default connect(mapStateToProps)(Home);
