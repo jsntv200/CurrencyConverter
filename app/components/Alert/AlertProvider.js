@@ -1,6 +1,7 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import { View } from 'react-native';
 import DropdownAlert from 'react-native-dropdownalert';
+import PropTypes from 'prop-types';
 
 class AlertProvider extends Component {
   static childContextTypes = {

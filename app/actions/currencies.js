@@ -6,7 +6,9 @@ export const swapCurrency = () => ({
   payload: {},
 });
 
-export const changeCurrencyAmount = amount => ({
+export const changeCurrencyAmount = (amount = 0) => ({
   type: CHANGE_CURRENCY_AMOUNT,
-  payload: { amount },
+  payload: {
+    amount: parseFloat(amount),
+  },
 });
