@@ -26,11 +26,17 @@ class Home extends Component {
   };
 
   handlePressBaseCurrency = () => {
-    this.props.navigation.navigate('CurrencyList', { title: 'Base Currency' });
+    this.props.navigation.navigate('CurrencyList', {
+      type: 'base',
+      title: 'Base Currency',
+    });
   };
 
   handlePressQuoteCurrency = () => {
-    this.props.navigation.navigate('CurrencyList', { title: 'Quote Currency' });
+    this.props.navigation.navigate('CurrencyList', {
+      type: 'quote',
+      title: 'Quote Currency',
+    });
   };
 
   handleOptionsPress = () => {
@@ -54,17 +60,17 @@ class Home extends Component {
           <Logo />
           <InputWithButton
             buttonText={this.props.baseCurrency}
+            onPress={this.handlePressBaseCurrency}
             defaultValue={this.props.amount.toString()}
             keyboardType="numeric"
             onChangeText={this.handleChangeText}
-            onPress={this.handlePressBaseCurrency}
           />
           <InputWithButton
             buttonText={this.props.quoteCurrency}
+            onPress={this.handlePressQuoteCurrency}
             value={this.props.isFetching ? '...' : this.props.quotePrice.toFixed(2)}
             editable={false}
             keyboardType="numeric"
-            onPress={this.handlePressQuoteCurrency}
           />
           <LastConverted
             base={this.props.baseCurrency}
@@ -80,8 +86,8 @@ class Home extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { baseCurrency, quoteCurrency, amount, isFetching } = state.currencies;
-  const conversionSelector = state.currencies[baseCurrency] || {};
+  const { baseCurrency, quoteCurrency, amount, conversions, isFetching } = state.currencies;
+  const conversionSelector = conversions[baseCurrency] || {};
 
   let conversionDate = new Date();
   let conversionRate = 0;
