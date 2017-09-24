@@ -3,7 +3,7 @@ import {
   SWAP_CURRENCY,
   CHANGE_BASE_CURRENCY,
   CHANGE_QUOTE_CURRENCY,
-} from '../actions//currencies';
+} from '../actions/currencies';
 
 // const initialState = {
 //   baseCurrency: 'USD',
