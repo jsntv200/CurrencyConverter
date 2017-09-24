@@ -7,20 +7,22 @@ import { ListItem, Separator } from '../components/List';
 import currencies from '../data/currencies';
 import { changeBaseCurrency, changeQuoteCurrency } from '../actions/currencies';
 
-const TEMP_CURRENT_CURRENCY = 'CAD';
-
 class CurrencyList extends Component {
   static propTypes = {
     navigation: PropTypes.object,
     dispatch: PropTypes.func,
+    baseCurrency: PropTypes.string,
+    quoteCurrency: PropTypes.string,
   };
 
-  handlePress = (currency) => {
-    const { type } = this.props.navigation.state.params;
+  isBase = () => this.props.navigation.state.params.type === 'base';
 
-    if (type === 'base') {
+  isQuote = () => this.props.navigation.state.params.type === 'quote';
+
+  handlePress = (currency) => {
+    if (this.isBase()) {
       this.props.dispatch(changeBaseCurrency(currency));
-    } else if (type === 'quote') {
+    } else if (this.isQuote()) {
       this.props.dispatch(changeQuoteCurrency(currency));
     }
 
@@ -28,6 +30,12 @@ class CurrencyList extends Component {
   };
 
   render() {
+    let comparisonCurrency = this.props.baseCurrency;
+
+    if (this.isQuote()) {
+      comparisonCurrency = this.props.quoteCurrency;
+    }
+
     return (
       <View style={{ flex: 1 }}>
         <StatusBar barStyle="default" translucent={false} />
@@ -36,7 +44,7 @@ class CurrencyList extends Component {
           renderItem={({ item }) => (
             <ListItem
               text={item}
-              selected={item === TEMP_CURRENT_CURRENCY}
+              selected={item === comparisonCurrency}
               onPress={() => this.handlePress(item)}
             />
           )}
@@ -48,8 +56,13 @@ class CurrencyList extends Component {
   }
 }
 
-const mapStateToProps = ({ currencies }) => ({
-  currentCurrency: 'CAD',
-});
+const mapStateToProps = (state) => {
+  const { baseCurrency, quoteCurrency } = state.currencies;
 
-export default connect()(CurrencyList);
+  return {
+    baseCurrency,
+    quoteCurrency,
+  };
+};
+
+export default connect(mapStateToProps)(CurrencyList);
