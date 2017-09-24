@@ -68,7 +68,11 @@ class Home extends Component {
           <InputWithButton
             buttonText={this.props.quoteCurrency}
             onPress={this.handlePressQuoteCurrency}
-            value={this.props.isFetching ? '...' : this.props.quotePrice.toFixed(2)}
+            value={
+              !this.props.quotePrice || this.props.isFetching
+                ? '...'
+                : this.props.quotePrice.toFixed(2)
+            }
             editable={false}
             keyboardType="numeric"
           />
