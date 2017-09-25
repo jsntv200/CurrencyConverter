@@ -6,7 +6,8 @@ import color from 'color';
 import styles from './styles';
 
 const InputWithButton = (props) => {
-  const { buttonText, editable = true, onPress } = props;
+  const { buttonText, textColor, editable = true, onPress } = props;
+  const buttonTextStyles = [styles.buttonText];
   const containerStyles = [styles.container];
   const underlayColor = color(styles.$buttonBackgroundColorBase).darken(
     styles.$buttonBackgroundColorModifier,
@@ -16,6 +17,10 @@ const InputWithButton = (props) => {
     containerStyles.push(styles.containerDisabled);
   }
 
+  if (textColor) {
+    buttonTextStyles.push({ color: textColor });
+  }
+
   return (
     <View style={containerStyles}>
       <TouchableHighlight
@@ -23,7 +28,7 @@ const InputWithButton = (props) => {
         style={styles.buttonContainer}
         onPress={onPress}
       >
-        <Text style={styles.buttonText}>{buttonText}</Text>
+        <Text style={buttonTextStyles}>{buttonText}</Text>
       </TouchableHighlight>
       <View style={styles.border} />
       <TextInput style={styles.input} underLineColorAndroid="tansparent" {...props} />
@@ -33,6 +38,7 @@ const InputWithButton = (props) => {
 
 InputWithButton.propTypes = {
   buttonText: PropTypes.string,
+  textColor: PropTypes.string,
   editable: PropTypes.bool,
   onPress: PropTypes.func,
 };
