@@ -1,6 +1,8 @@
 import React from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
+import { addNavigationHelpers } from 'react-navigation';
+import PropTypes from 'prop-types';
 
 import { AlertProvider } from './components/Alert';
 import Navigator from './config/routes';
@@ -18,10 +20,22 @@ EStyleSheet.build({
   $darkText: '#343434',
 });
 
+const App = ({ dispatch, navigation }) => (
+  <Navigator
+    navigation={addNavigationHelpers({
+      dispatch,
+      state: navigation,
+    })}
+  />
+);
+
+const mapStateToProps = ({ navigation }) => ({ navigation });
+const AppWithNavigation = connect(mapStateToProps)(App);
+
 export default () => (
   <Provider store={store}>
     <AlertProvider>
-      <Navigator />
+      <AppWithNavigation />
     </AlertProvider>
   </Provider>
 );
