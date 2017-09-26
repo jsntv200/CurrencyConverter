@@ -10,7 +10,7 @@ import { InputWithButton } from '../components/TextInput';
 import { ClearButton } from '../components/Buttons';
 import { LastConverted } from '../components/Text';
 
-import { swapCurrency, changeCurrencyAmount } from '../actions/currencies';
+import { changeCurrencyAmount, getInitialConversion, swapCurrency } from '../actions/currencies';
 
 class Home extends Component {
   static propTypes = {
@@ -25,6 +25,10 @@ class Home extends Component {
     primaryColor: PropTypes.string,
     isFetching: PropTypes.bool,
   };
+
+  componentWillMount() {
+    this.props.dispatch(getInitialConversion());
+  }
 
   handlePressBaseCurrency = () => {
     this.props.navigation.navigate('CurrencyList', {
