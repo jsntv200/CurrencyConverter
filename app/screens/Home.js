@@ -9,6 +9,7 @@ import { Logo } from '../components/Logo';
 import { InputWithButton } from '../components/TextInput';
 import { ClearButton } from '../components/Buttons';
 import { LastConverted } from '../components/Text';
+import { connectAlert } from '../components/Alert';
 
 import { changeCurrencyAmount, getInitialConversion, swapCurrency } from '../actions/currencies';
 
@@ -24,10 +25,20 @@ class Home extends Component {
     quotePrice: PropTypes.number,
     primaryColor: PropTypes.string,
     isFetching: PropTypes.bool,
+    alertWithType: PropTypes.func,
+    currencyError: PropTypes.string,
   };
 
   componentWillMount() {
     this.props.dispatch(getInitialConversion());
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { currencyError } = nextProps;
+
+    if (currencyError && currencyError !== this.props.currencyError) {
+      this.props.alertWithType('error', 'Error', currencyError);
+    }
   }
 
   handlePressBaseCurrency = () => {
@@ -97,7 +108,7 @@ class Home extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { baseCurrency, quoteCurrency, amount, conversions, isFetching } = state.currencies;
+  const { amount, baseCurrency, conversions, error, quoteCurrency, isFetching } = state.currencies;
   const { primaryColor } = state.theme;
   const conversionSelector = conversions[baseCurrency] || {};
 
@@ -122,8 +133,9 @@ const mapStateToProps = (state) => {
     conversionRate,
     quotePrice,
     primaryColor,
+    currencyError: error,
     isFetching,
   };
 };
 
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps)(connectAlert(Home));
