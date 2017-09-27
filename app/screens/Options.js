@@ -21,7 +21,7 @@ class Options extends Component {
   };
 
   handleSitePress = () => {
-    Linking.openURL('httpkjhdfg://fixer.io').catch(() => {
+    Linking.openURL('http://fixer.io').catch(() => {
       this.props.alertWithType('error', 'Sorry!', 'Could not connect to Fixer.io');
     });
   };

@@ -4,6 +4,8 @@ import {
   CHANGE_BASE_CURRENCY,
   CHANGE_QUOTE_CURRENCY,
   GET_INITIAL_CONVERSION,
+  CONVERSION_RESULT,
+  CONVERSION_ERROR,
 } from '../actions/currencies';
 
 const initialState = {
@@ -11,6 +13,7 @@ const initialState = {
   quoteCurrency: 'GBP',
   amount: 100,
   conversions: {},
+  error: null,
 };
 
 const setConversions = (conversions, currency) => {
@@ -53,6 +56,34 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         quoteCurrency: payload.currency,
         conversions: setConversions(state.conversions, payload.currency),
+      };
+
+    case GET_INITIAL_CONVERSION:
+      return {
+        ...state,
+        conversions: setConversions(state.conversions, state.baseCurrency),
+      };
+
+    case CONVERSION_RESULT:
+      const { base, rates, date } = payload;
+      return {
+        ...state,
+        baseCurrency: payload.base,
+        conversions: {
+          ...state.conversions,
+          [base]: {
+            isFetching: false,
+            date,
+            rates,
+          },
+        },
+      };
+
+    case CONVERSION_ERROR:
+      const { error } = payload;
+      return {
+        ...state,
+        error,
       };
 
     default:
